@@ -105,11 +105,22 @@ class ChatController {
 
   /// Update a mesage.
   void updateMessages(Iterable<Message> messages) {
-    for(var message in messages) {
-      final indexOfMessage = initialMessageList.indexWhere((m) =>
-      m.id == message.id);
+    for (var message in messages) {
+      final indexOfMessage =
+          initialMessageList.indexWhere((m) => m.id == message.id);
       initialMessageList[indexOfMessage] = message;
     }
+
+    if (!messageStreamController.isClosed) {
+      messageStreamController.sink.add(initialMessageList);
+    }
+  }
+
+  /// Remove a mesage.
+  void removeMessage(Message message) {
+    final indexOfMessage =
+        initialMessageList.indexWhere((m) => m.id == message.id);
+    initialMessageList.removeAt(indexOfMessage);
 
     if (!messageStreamController.isClosed) {
       messageStreamController.sink.add(initialMessageList);
@@ -177,9 +188,8 @@ class ChatController {
       );
 
   /// Scroll to a specific message
-  void scrollToMessage(Message message) => Timer(
-    const Duration(milliseconds: 300),
-      () async{
+  void scrollToMessage(Message message) =>
+      Timer(const Duration(milliseconds: 300), () async {
         await Scrollable.ensureVisible(
           message.key.currentState!.context,
           // This value will make widget to be in center when auto scrolled.
@@ -187,8 +197,7 @@ class ChatController {
           curve: Curves.easeIn,
           duration: const Duration(milliseconds: 300),
         );
-      }
-  );
+      });
 
   /// Function for loading data while pagination.
   void loadMoreData(List<Message> messageList) {
