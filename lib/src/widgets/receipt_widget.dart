@@ -47,7 +47,7 @@ class ReceiptWidget extends StatelessWidget {
                 case MessageStatus.delivered:
                   return Icon(Icons.speed, color: Colors.orange, size: 15);
                 case MessageStatus.pending:
-                  return Icon(Icons.speed, color: Colors.grey, size: 10);
+                  return Icon(Icons.speed, color: Colors.grey, size: 15);
               }
             },
           ),
