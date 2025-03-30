@@ -31,6 +31,7 @@ import 'package:chatview/src/widgets/reaction_popup.dart';
 import 'package:chatview/src/widgets/suggestions/suggestions_config_inherited_widget.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+
 import '../utils/timeago/timeago.dart';
 import '../values/custom_time_messages.dart';
 import 'send_message_widget.dart';
@@ -216,14 +217,14 @@ class _ChatViewState extends State<ChatView>
             scrollToBottomButtonConfig: widget.scrollToBottomButtonConfig,
             child: Stack(
               children: [
-                if( chatBackgroundConfig.backgroundWidget!=null)
-                  Positioned.fill(child: chatBackgroundConfig.backgroundWidget!),
+                if (chatBackgroundConfig.backgroundWidget != null)
+                  Positioned.fill(
+                      child: chatBackgroundConfig.backgroundWidget!),
                 Container(
                   height: chatBackgroundConfig.height ??
                       MediaQuery.of(context).size.height,
                   width: chatBackgroundConfig.width ??
                       MediaQuery.of(context).size.width,
-
                   padding: chatBackgroundConfig.padding,
                   margin: chatBackgroundConfig.margin,
                   child: Column(

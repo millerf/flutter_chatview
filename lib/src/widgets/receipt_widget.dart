@@ -25,10 +25,10 @@ class ReceiptWidget extends StatelessWidget {
       children: [
         Text(
           timeFormat.format(time),
-          style: Theme.of(context)
-              .textTheme
-              .labelSmall
-              ?.copyWith(color: Colors.grey),
+          style: Theme.of(context).textTheme.labelSmall?.copyWith(
+              color: isMessageByCurrentUser
+                  ? Colors.grey.withAlpha(90)
+                  : Colors.white.withAlpha(90)),
         ),
         if (isMessageByCurrentUser) SizedBox(width: 5),
         if (isMessageByCurrentUser)

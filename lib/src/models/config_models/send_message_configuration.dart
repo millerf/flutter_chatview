@@ -24,6 +24,7 @@ import 'package:audio_waveforms/audio_waveforms.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:platform_maps_flutter/platform_maps_flutter.dart';
 
 import '../../values/enumeration.dart';
 import '../../values/typedefs.dart';
@@ -56,6 +57,8 @@ class SendMessageConfiguration {
   /// Provides configuration of image picker functionality.
   final ImagePickerIconsConfiguration? imagePickerIconsConfig;
 
+  final LocationPickerIconsConfiguration? locationPickerIconsConfig;
+
   /// Provides configuration of image picker plugin.
   final ImagePickerConfiguration? imagePickerConfiguration;
 
@@ -71,6 +74,9 @@ class SendMessageConfiguration {
   /// Enable/disable send image from camera. Enabled by default.
   final bool enableCameraImagePicker;
 
+  /// Enable/disable sendint a Location. Enabled by default.
+  final bool enableLocationPicker;
+
   /// Color of mic icon when replying to some voice message.
   final Color? micIconColor;
 
@@ -80,24 +86,42 @@ class SendMessageConfiguration {
   /// Configuration for cancel voice recording
   final CancelRecordConfiguration? cancelRecordConfiguration;
 
-  const SendMessageConfiguration({
-    this.textFieldConfig,
-    this.textFieldBackgroundColor,
-    this.textFieldContainerBackgroundColor,
-    this.imagePickerIconsConfig,
-    this.imagePickerConfiguration,
-    this.defaultSendButtonColor,
-    this.sendButtonIcon,
-    this.replyDialogColor,
-    this.replyTitleColor,
-    this.replyMessageColor,
-    this.closeIconColor,
-    this.allowRecordingVoice = true,
-    this.enableCameraImagePicker = true,
-    this.enableGalleryImagePicker = true,
-    this.voiceRecordingConfiguration,
-    this.micIconColor,
-    this.cancelRecordConfiguration,
+  /// Callback when clicking on the location picker button
+  final Future<LatLng?> Function()? locationPickerCallback;
+
+  const SendMessageConfiguration(
+      {this.textFieldConfig,
+      this.textFieldBackgroundColor,
+      this.textFieldContainerBackgroundColor,
+      this.imagePickerIconsConfig,
+      this.imagePickerConfiguration,
+      this.defaultSendButtonColor,
+      this.sendButtonIcon,
+      this.replyDialogColor,
+      this.replyTitleColor,
+      this.replyMessageColor,
+      this.closeIconColor,
+      this.allowRecordingVoice = true,
+      this.enableCameraImagePicker = true,
+      this.enableGalleryImagePicker = true,
+      this.enableLocationPicker = true,
+      this.voiceRecordingConfiguration,
+      this.micIconColor,
+      this.cancelRecordConfiguration,
+      this.locationPickerIconsConfig,
+      this.locationPickerCallback});
+}
+
+class LocationPickerIconsConfiguration {
+  /// Provides ability to pass custom location picker icon.
+  final Widget? locationPickerIcon;
+
+  /// Used to give color to location icon.
+  final Color? locationPickerIconColor;
+
+  const LocationPickerIconsConfiguration({
+    this.locationPickerIcon,
+    this.locationPickerIconColor,
   });
 }
 

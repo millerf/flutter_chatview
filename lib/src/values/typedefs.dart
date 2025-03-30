@@ -22,6 +22,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:chatview/chatview.dart';
 import 'package:flutter/material.dart';
+import 'package:platform_maps_flutter/platform_maps_flutter.dart';
 
 typedef StringCallback = void Function(String);
 typedef StringMessageCallBack = void Function(
@@ -38,6 +39,7 @@ typedef DoubleCallBack = void Function(double, double);
 typedef MessageCallBack = void Function(Message message);
 typedef VoidCallBackWithFuture = Future<void> Function();
 typedef StringsCallBack = void Function(String emoji, String messageId);
+typedef LocationCallBack = void Function(LatLng? location);
 typedef StringWithReturnWidget = Widget Function(String separator);
 typedef DragUpdateDetailsCallback = void Function(DragUpdateDetails);
 typedef MoreTapCallBack = void Function(

@@ -27,21 +27,22 @@ import 'package:chatview/src/utils/constants/constants.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:platform_maps_flutter/platform_maps_flutter.dart';
 
 import '../../chatview.dart';
 import '../utils/debounce.dart';
 import '../utils/package_strings.dart';
 
 class ChatUITextField extends StatefulWidget {
-  const ChatUITextField({
-    super.key,
-    this.sendMessageConfig,
-    required this.focusNode,
-    required this.textEditingController,
-    required this.onPressed,
-    required this.onRecordingComplete,
-    required this.onImageSelected,
-  });
+  const ChatUITextField(
+      {super.key,
+      this.sendMessageConfig,
+      required this.focusNode,
+      required this.textEditingController,
+      required this.onPressed,
+      required this.onRecordingComplete,
+      required this.onImageSelected,
+      required this.onLocationSelected});
 
   /// Provides configuration of default text field in chat.
   final SendMessageConfiguration? sendMessageConfig;
@@ -60,6 +61,9 @@ class ChatUITextField extends StatefulWidget {
 
   /// Provides callback when user select images from camera/gallery.
   final StringsCallBack onImageSelected;
+
+  /// Provides callback when user selects a location.
+  final LocationCallBack onLocationSelected;
 
   @override
   State<ChatUITextField> createState() => _ChatUITextFieldState();
@@ -81,6 +85,9 @@ class _ChatUITextFieldState extends State<ChatUITextField> {
 
   ImagePickerIconsConfiguration? get imagePickerIconsConfig =>
       sendMessageConfig?.imagePickerIconsConfig;
+
+  LocationPickerIconsConfiguration? get locationPickerIconsConfig =>
+      sendMessageConfig?.locationPickerIconsConfig;
 
   TextFieldConfiguration? get textFieldConfig =>
       sendMessageConfig?.textFieldConfig;
@@ -263,6 +270,28 @@ class _ChatUITextFieldState extends State<ChatUITextField> {
                                     Icons.image,
                                     color: imagePickerIconsConfig
                                         ?.galleryIconColor,
+                                  ),
+                            ),
+                          if (sendMessageConfig?.enableLocationPicker ??
+                              true &&
+                                  sendMessageConfig?.locationPickerCallback !=
+                                      null)
+                            IconButton(
+                              constraints: const BoxConstraints(),
+                              onPressed: (textFieldConfig?.enabled ?? true)
+                                  ? () async {
+                                      LatLng? location = await sendMessageConfig
+                                          ?.locationPickerCallback!
+                                          .call();
+                                      widget.onLocationSelected(location);
+                                    }
+                                  : null,
+                              icon: locationPickerIconsConfig
+                                      ?.locationPickerIcon ??
+                                  Icon(
+                                    Icons.near_me,
+                                    color: locationPickerIconsConfig
+                                        ?.locationPickerIconColor,
                                   ),
                             ),
                         ],

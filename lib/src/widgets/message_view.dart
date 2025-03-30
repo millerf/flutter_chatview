@@ -21,6 +21,8 @@
  */
 import 'package:chatview/chatview.dart';
 import 'package:chatview/src/extensions/extensions.dart';
+import 'package:chatview/src/utils/map_location_message.dart';
+import 'package:chatview/src/widgets/location_message_view.dart';
 import 'package:flutter/material.dart';
 
 import '../utils/constants/constants.dart';
@@ -211,16 +213,31 @@ class _MessageViewState extends State<MessageView>
                     highlightScale: widget.highlightScale,
                   );
                 } else if (widget.message.messageType.isText) {
-                  return TextMessageView(
-                    inComingChatBubbleConfig: widget.inComingChatBubbleConfig,
-                    outgoingChatBubbleConfig: widget.outgoingChatBubbleConfig,
-                    isMessageByCurrentUser: widget.isMessageByCurrentUser,
-                    message: widget.message,
-                    chatBubbleMaxWidth: widget.chatBubbleMaxWidth,
-                    messageReactionConfig: messageConfig?.messageReactionConfig,
-                    highlightColor: widget.highlightColor,
-                    highlightMessage: widget.shouldHighlight,
-                  );
+                  if (isLocationMessage(widget.message)) {
+                    return LocationMessageView(
+                      inComingChatBubbleConfig: widget.inComingChatBubbleConfig,
+                      outgoingChatBubbleConfig: widget.outgoingChatBubbleConfig,
+                      isMessageByCurrentUser: widget.isMessageByCurrentUser,
+                      message: widget.message,
+                      chatBubbleMaxWidth: widget.chatBubbleMaxWidth,
+                      messageReactionConfig:
+                          messageConfig?.messageReactionConfig,
+                      highlightColor: widget.highlightColor,
+                      highlightMessage: widget.shouldHighlight,
+                    );
+                  } else {
+                    return TextMessageView(
+                      inComingChatBubbleConfig: widget.inComingChatBubbleConfig,
+                      outgoingChatBubbleConfig: widget.outgoingChatBubbleConfig,
+                      isMessageByCurrentUser: widget.isMessageByCurrentUser,
+                      message: widget.message,
+                      chatBubbleMaxWidth: widget.chatBubbleMaxWidth,
+                      messageReactionConfig:
+                          messageConfig?.messageReactionConfig,
+                      highlightColor: widget.highlightColor,
+                      highlightMessage: widget.shouldHighlight,
+                    );
+                  }
                 } else if (widget.message.messageType.isVoice) {
                   return VoiceMessageView(
                     screenWidth: MediaQuery.of(context).size.width,

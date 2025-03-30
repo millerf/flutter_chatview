@@ -23,12 +23,14 @@ import 'dart:io' if (kIsWeb) 'dart:html';
 
 import 'package:chatview/chatview.dart';
 import 'package:chatview/src/extensions/extensions.dart';
+import 'package:chatview/src/utils/map_location_message.dart';
 import 'package:chatview/src/utils/package_strings.dart';
 import 'package:chatview/src/widgets/chatui_textfield.dart';
 import 'package:chatview/src/widgets/reply_message_view.dart';
 import 'package:chatview/src/widgets/scroll_to_bottom_button.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
+import 'package:platform_maps_flutter/platform_maps_flutter.dart';
 
 import '../utils/constants/constants.dart';
 
@@ -284,6 +286,7 @@ class SendMessageWidgetState extends State<SendMessageWidget> {
                                     sendMessageConfig: widget.sendMessageConfig,
                                     onRecordingComplete: _onRecordingComplete,
                                     onImageSelected: _onImageSelected,
+                                    onLocationSelected: _onLocationSelected,
                                   )
                                 ],
                               ),
@@ -308,6 +311,15 @@ class SendMessageWidgetState extends State<SendMessageWidget> {
     debugPrint('Call in Send Message Widget');
     if (imagePath.isNotEmpty) {
       widget.onSendTap.call(imagePath, replyMessage, MessageType.image);
+      _assignRepliedMessage();
+    }
+  }
+
+  void _onLocationSelected(LatLng? location) {
+    debugPrint('Call in Send Message Widget');
+    if (location != null) {
+      widget.onSendTap.call(locationMessageFromLocation(location), replyMessage,
+          MessageType.text);
       _assignRepliedMessage();
     }
   }
