@@ -20,13 +20,20 @@
  * SOFTWARE.
  */
 
+import 'dart:ui';
+
 import 'package:intl/intl.dart';
 
 class ReceiptsWidgetConfig {
   // Time format for the receipt
   final DateFormat? timeFormat;
 
-  const ReceiptsWidgetConfig({
-    this.timeFormat,
-  });
+  /// Used for giving color of chat bubble receipt text.
+  final Color? receiptColor;
+
+  /// Used for giving color of chat bubble receipt text.
+  final Color? receiptColorCurrentUser;
+
+  const ReceiptsWidgetConfig(
+      {this.timeFormat, this.receiptColor, this.receiptColorCurrentUser});
 }

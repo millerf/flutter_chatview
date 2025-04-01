@@ -27,8 +27,9 @@ class ReceiptWidget extends StatelessWidget {
           timeFormat.format(time),
           style: Theme.of(context).textTheme.labelSmall?.copyWith(
               color: isMessageByCurrentUser
-                  ? Colors.grey.withAlpha(90)
-                  : Colors.white.withAlpha(90)),
+                  ? (receiptWidgetConfig?.receiptColorCurrentUser ??
+                      Colors.black)
+                  : (receiptWidgetConfig?.receiptColor ?? Colors.grey)),
         ),
         if (isMessageByCurrentUser) SizedBox(width: 5),
         if (isMessageByCurrentUser)

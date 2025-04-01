@@ -21,7 +21,6 @@
  */
 import 'package:chatview/chatview.dart';
 import 'package:chatview/src/extensions/extensions.dart';
-import 'package:chatview/src/utils/map_location_message.dart';
 import 'package:chatview/src/widgets/location_message_view.dart';
 import 'package:flutter/material.dart';
 
@@ -224,6 +223,7 @@ class _MessageViewState extends State<MessageView>
                           messageConfig?.messageReactionConfig,
                       highlightColor: widget.highlightColor,
                       highlightMessage: widget.shouldHighlight,
+                      receiptWidgetConfig: widget.receiptWidgetConfig,
                     );
                   } else {
                     return TextMessageView(
@@ -236,6 +236,7 @@ class _MessageViewState extends State<MessageView>
                           messageConfig?.messageReactionConfig,
                       highlightColor: widget.highlightColor,
                       highlightMessage: widget.shouldHighlight,
+                      receiptWidgetConfig: widget.receiptWidgetConfig,
                     );
                   }
                 } else if (widget.message.messageType.isVoice) {

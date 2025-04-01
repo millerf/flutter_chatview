@@ -20,7 +20,6 @@
  * SOFTWARE.
  */
 import 'package:chatview/chatview.dart';
-import 'package:chatview/src/utils/map_location_message.dart';
 import 'package:chatview/src/widgets/receipt_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:platform_maps_flutter/platform_maps_flutter.dart';
@@ -74,60 +73,63 @@ class LocationMessageView extends StatelessWidget {
     if (position == null) {
       return SizedBox();
     }
-    return Stack(
-      clipBehavior: Clip.none,
-      children: [
-        Container(
-          decoration: BoxDecoration(
-            color: highlightMessage ? highlightColor : _color,
-            borderRadius: _borderRadius(''),
-          ),
-          padding: _padding ??
-              const EdgeInsets.symmetric(
-                horizontal: 12,
-                vertical: 10,
-              ),
-          margin: _margin ??
-              EdgeInsets.fromLTRB(
-                  5, 0, 6, message.reaction.reactions.isNotEmpty ? 15 : 2),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
-              SizedBox(
-                width: chatBubbleMaxWidth ??
-                    MediaQuery.of(context).size.width * 0.5,
-                height: 100,
-                child: PlatformMap(
-                  compassEnabled: false,
-                  zoomControlsEnabled: false,
-                  rotateGesturesEnabled: false,
-                  scrollGesturesEnabled: false,
-                  zoomGesturesEnabled: false,
-                  tiltGesturesEnabled: false,
-                  markers: {
-                    Marker(
-                      markerId: MarkerId(message.id.toString()),
-                    ),
-                  },
-                  initialCameraPosition:
-                      CameraPosition(target: position, zoom: 10),
+    return Container(
+      margin: _margin ??
+          EdgeInsets.fromLTRB(
+              5, 0, 6, message.reaction.reactions.isNotEmpty ? 15 : 2),
+      child: Column(crossAxisAlignment: CrossAxisAlignment.end, children: [
+        Stack(
+          clipBehavior: Clip.none,
+          children: [
+            Container(
+                decoration: BoxDecoration(
+                  color: highlightMessage ? highlightColor : _color,
+                  borderRadius: _borderRadius(''),
                 ),
+                padding: _padding ??
+                    const EdgeInsets.symmetric(
+                      horizontal: 12,
+                      vertical: 10,
+                    ),
+                child: SizedBox(
+                  width: chatBubbleMaxWidth ??
+                      MediaQuery.of(context).size.width * 0.5,
+                  height: 100,
+                  child: Container(
+                    decoration: BoxDecoration(
+                      borderRadius: _borderRadius(''),
+                    ),
+                    child: PlatformMap(
+                      compassEnabled: false,
+                      zoomControlsEnabled: false,
+                      rotateGesturesEnabled: false,
+                      scrollGesturesEnabled: false,
+                      zoomGesturesEnabled: false,
+                      tiltGesturesEnabled: false,
+                      markers: {
+                        Marker(
+                          markerId: MarkerId(message.id.toString()),
+                        ),
+                      },
+                      initialCameraPosition:
+                          CameraPosition(target: position, zoom: 10),
+                    ),
+                  ),
+                )),
+            if (message.reaction.reactions.isNotEmpty)
+              ReactionWidget(
+                key: key,
+                isMessageByCurrentUser: isMessageByCurrentUser,
+                reaction: message.reaction,
+                messageReactionConfig: messageReactionConfig,
               ),
-              ReceiptWidget(
-                  message: message,
-                  receiptWidgetConfig: receiptWidgetConfig,
-                  isMessageByCurrentUser: isMessageByCurrentUser),
-            ],
-          ),
+          ],
         ),
-        if (message.reaction.reactions.isNotEmpty)
-          ReactionWidget(
-            key: key,
-            isMessageByCurrentUser: isMessageByCurrentUser,
-            reaction: message.reaction,
-            messageReactionConfig: messageReactionConfig,
-          ),
-      ],
+        ReceiptWidget(
+            message: message,
+            receiptWidgetConfig: receiptWidgetConfig,
+            isMessageByCurrentUser: isMessageByCurrentUser),
+      ]),
     );
   }
 
