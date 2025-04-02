@@ -21,12 +21,10 @@
  */
 
 import 'package:audio_waveforms/audio_waveforms.dart';
+import 'package:chatview/chatview.dart';
 import 'package:flutter/material.dart';
 
-import '../models/models.dart';
 import '../utils/package_strings.dart';
-import '../values/enumeration.dart';
-import '../values/typedefs.dart';
 
 class ReplyMessageView extends StatelessWidget {
   const ReplyMessageView({
@@ -79,15 +77,27 @@ class ReplyMessageView extends StatelessWidget {
         ),
       MessageType.custom when customMessageReplyViewBuilder != null =>
         customMessageReplyViewBuilder!(message),
-      MessageType.custom || MessageType.text => Text(
-          message.message,
-          maxLines: 1,
-          overflow: TextOverflow.ellipsis,
-          style: TextStyle(
-            fontSize: 12,
-            color: sendMessageConfig?.replyMessageColor ?? Colors.black,
-          ),
-        ),
+      MessageType.custom || MessageType.text => (isLocationMessage(Message(
+              message: message.message, createdAt: DateTime.now(), sentBy: 0)))
+          ? Row(
+              children: [
+                Icon(
+                  Icons.location_on_outlined,
+                  size: 20,
+                  color: sendMessageConfig?.replyMessageColor ??
+                      Colors.grey.shade700,
+                ),
+              ],
+            )
+          : Text(
+              message.message,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: TextStyle(
+                fontSize: 12,
+                color: sendMessageConfig?.replyMessageColor ?? Colors.black,
+              ),
+            ),
     };
   }
 }

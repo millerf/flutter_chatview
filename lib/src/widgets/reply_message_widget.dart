@@ -55,7 +55,8 @@ class ReplyMessageWidget extends StatelessWidget {
     final replyMessage = this.replyMessage.message;
     final ChatUser messagedUser =
         chatController!.getUserFromId(this.replyMessage.replyBy);
-    final String replyBy = replyBySender ? PackageStrings.you : messagedUser.name;
+    final String replyBy =
+        replyBySender ? PackageStrings.you : messagedUser.name;
     return GestureDetector(
       onTap: onTap,
       child: Container(
@@ -139,11 +140,13 @@ class ReplyMessageWidget extends StatelessWidget {
                                               Colors.white,
                                         ),
                                         const SizedBox(width: 2),
-                                        if (this.replyMessage
+                                        if (this
+                                                .replyMessage
                                                 .voiceMessageDuration !=
                                             null)
                                           Text(
-                                            this.replyMessage
+                                            this
+                                                .replyMessage
                                                 .voiceMessageDuration!
                                                 .toHHMMSS(),
                                             style:
@@ -151,12 +154,21 @@ class ReplyMessageWidget extends StatelessWidget {
                                           ),
                                       ],
                                     )
-                                  : Text(
-                                      replyMessage,
-                                      style: repliedMessageConfig?.textStyle ??
-                                          textTheme.bodyMedium!
-                                              .copyWith(color: Colors.black),
-                                    ),
+                                  : ((!isLocationMessage(Message(
+                                          message: replyMessage,
+                                          createdAt: DateTime.now(),
+                                          sentBy: 0)))
+                                      ? Text(
+                                          replyMessage,
+                                          style: repliedMessageConfig
+                                                  ?.textStyle ??
+                                              textTheme.bodyMedium!.copyWith(
+                                                  color: Colors.black),
+                                        )
+                                      : Icon(
+                                          Icons.location_on_outlined,
+                                          size: 20,
+                                        )),
                             ),
                     ),
                   ),

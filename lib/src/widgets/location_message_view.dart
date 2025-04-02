@@ -99,10 +99,8 @@ class LocationMessageView extends StatelessWidget {
                   width: chatBubbleMaxWidth ??
                       MediaQuery.of(context).size.width * 0.5,
                   height: 100,
-                  child: Container(
-                    decoration: BoxDecoration(
-                      borderRadius: _borderRadius(''),
-                    ),
+                  child: ClipRRect(
+                    borderRadius: _borderRadius(''),
                     child: PlatformMap(
                       compassEnabled: false,
                       zoomControlsEnabled: false,
@@ -114,12 +112,12 @@ class LocationMessageView extends StatelessWidget {
                         Marker(
                           markerId: MarkerId(message.id.toString()),
                           position: position,
-                          onTap: () {
-                            if (onLocationClick != null) {
-                              onLocationClick!(position);
-                            }
-                          },
                         )
+                      },
+                      onTap: (_) {
+                        if (onLocationClick != null) {
+                          onLocationClick!(position);
+                        }
                       },
                       initialCameraPosition:
                           CameraPosition(target: position, zoom: 10),
