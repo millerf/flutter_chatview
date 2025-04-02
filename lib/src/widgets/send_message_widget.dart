@@ -24,7 +24,6 @@ import 'dart:io' if (kIsWeb) 'dart:html';
 import 'package:chatview/chatview.dart';
 import 'package:chatview/src/extensions/extensions.dart';
 import 'package:chatview/src/utils/package_strings.dart';
-import 'package:chatview/src/widgets/chatui_textfield.dart';
 import 'package:chatview/src/widgets/reply_message_view.dart';
 import 'package:chatview/src/widgets/scroll_to_bottom_button.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
@@ -32,6 +31,7 @@ import 'package:flutter/material.dart';
 import 'package:platform_maps_flutter/platform_maps_flutter.dart';
 
 import '../utils/constants/constants.dart';
+import 'chatui_textfield.dart';
 
 class SendMessageWidget extends StatefulWidget {
   const SendMessageWidget({
@@ -98,6 +98,9 @@ class SendMessageWidgetState extends State<SendMessageWidget> {
 
   @override
   Widget build(BuildContext context) {
+    bool isKeyboardOpen =
+        WidgetsBinding.instance.window.viewInsets.bottom > 0.0;
+
     final scrollToBottomButtonConfig =
         chatListConfig.scrollToBottomButtonConfig;
     return Align(
@@ -151,7 +154,7 @@ class SendMessageWidgetState extends State<SendMessageWidget> {
                                   bottomPadding4,
                                   bottomPadding4,
                                   bottomPadding4,
-                                  bottomPadding4),
+                                  isKeyboardOpen ? 0 : bottomPadding4),
                               child: Stack(
                                 alignment: Alignment.bottomCenter,
                                 children: [
