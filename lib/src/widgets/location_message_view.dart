@@ -28,18 +28,18 @@ import '../utils/constants/constants.dart';
 import 'reaction_widget.dart';
 
 class LocationMessageView extends StatelessWidget {
-  const LocationMessageView({
-    super.key,
-    required this.isMessageByCurrentUser,
-    required this.message,
-    this.chatBubbleMaxWidth,
-    this.inComingChatBubbleConfig,
-    this.outgoingChatBubbleConfig,
-    this.receiptWidgetConfig,
-    this.messageReactionConfig,
-    this.highlightMessage = false,
-    this.highlightColor,
-  });
+  const LocationMessageView(
+      {super.key,
+      required this.isMessageByCurrentUser,
+      required this.message,
+      this.chatBubbleMaxWidth,
+      this.inComingChatBubbleConfig,
+      this.outgoingChatBubbleConfig,
+      this.receiptWidgetConfig,
+      this.messageReactionConfig,
+      this.highlightMessage = false,
+      this.highlightColor,
+      this.onLocationClick});
 
   /// Represents current message is sent by current user.
   final bool isMessageByCurrentUser;
@@ -65,7 +65,11 @@ class LocationMessageView extends StatelessWidget {
   /// Allow user to set color of highlighted message.
   final Color? highlightColor;
 
+  /// Receipt config
   final ReceiptsWidgetConfig? receiptWidgetConfig;
+
+  /// Allow to do something on location click
+  final LocationCallBack? onLocationClick;
 
   @override
   Widget build(BuildContext context) {
@@ -109,7 +113,13 @@ class LocationMessageView extends StatelessWidget {
                       markers: {
                         Marker(
                           markerId: MarkerId(message.id.toString()),
-                        ),
+                          position: position,
+                          onTap: () {
+                            if (onLocationClick != null) {
+                              onLocationClick!(position);
+                            }
+                          },
+                        )
                       },
                       initialCameraPosition:
                           CameraPosition(target: position, zoom: 10),

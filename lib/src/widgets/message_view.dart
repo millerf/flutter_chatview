@@ -224,6 +224,7 @@ class _MessageViewState extends State<MessageView>
                       highlightColor: widget.highlightColor,
                       highlightMessage: widget.shouldHighlight,
                       receiptWidgetConfig: widget.receiptWidgetConfig,
+                      onLocationClick: widget.messageConfig?.onLocationClick,
                     );
                   } else {
                     return TextMessageView(

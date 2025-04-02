@@ -43,12 +43,15 @@ class MessageConfiguration {
   /// To customize reply view for custom message type
   final CustomMessageReplyViewBuilder? customMessageReplyViewBuilder;
 
-  const MessageConfiguration({
-    this.imageMessageConfig,
-    this.messageReactionConfig,
-    this.emojiMessageConfig,
-    this.customMessageBuilder,
-    this.voiceMessageConfig,
-    this.customMessageReplyViewBuilder,
-  });
+  /// Allow to do something on location click
+  final LocationCallBack? onLocationClick;
+
+  const MessageConfiguration(
+      {this.imageMessageConfig,
+      this.messageReactionConfig,
+      this.emojiMessageConfig,
+      this.customMessageBuilder,
+      this.voiceMessageConfig,
+      this.customMessageReplyViewBuilder,
+      this.onLocationClick});
 }
