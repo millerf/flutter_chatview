@@ -24,9 +24,20 @@ import 'package:chatview/src/extensions/extensions.dart';
 import 'package:chatview/src/widgets/receipt_widget.dart';
 import 'package:flutter/material.dart';
 
-import '../utils/constants/constants.dart';
 import 'link_preview.dart';
 import 'reaction_widget.dart';
+
+/// Enum to represent the position of a message within a grouped sequence
+enum MessageGroupPosition {
+  /// Single message (not part of a group)
+  single,
+  /// First message in a group
+  first,
+  /// Middle message in a group
+  middle,
+  /// Last message in a group
+  last,
+}
 
 class TextMessageView extends StatelessWidget {
   const TextMessageView({
@@ -40,6 +51,8 @@ class TextMessageView extends StatelessWidget {
     this.messageReactionConfig,
     this.highlightMessage = false,
     this.highlightColor,
+    this.previousMessage,
+    this.nextMessage,
   });
 
   /// Represents current message is sent by current user.
@@ -67,6 +80,12 @@ class TextMessageView extends StatelessWidget {
   final Color? highlightColor;
 
   final ReceiptsWidgetConfig? receiptWidgetConfig;
+
+  /// Previous message for grouping context
+  final Message? previousMessage;
+
+  /// Next message for grouping context
+  final Message? nextMessage;
 
   @override
   Widget build(BuildContext context) {
@@ -151,15 +170,121 @@ class TextMessageView extends StatelessWidget {
       ? outgoingChatBubbleConfig?.textStyle
       : inComingChatBubbleConfig?.textStyle;
 
-  BorderRadiusGeometry _borderRadius(String message) => isMessageByCurrentUser
-      ? outgoingChatBubbleConfig?.borderRadius ??
-          (message.length < 37
-              ? BorderRadius.circular(replyBorderRadius1)
-              : BorderRadius.circular(replyBorderRadius2))
-      : inComingChatBubbleConfig?.borderRadius ??
-          (message.length < 29
-              ? BorderRadius.circular(replyBorderRadius1)
-              : BorderRadius.circular(replyBorderRadius2));
+  BorderRadiusGeometry _borderRadius(String messageText) {
+    // If custom borderRadius is provided, use it
+    final customBorderRadius = isMessageByCurrentUser
+        ? outgoingChatBubbleConfig?.borderRadius
+        : inComingChatBubbleConfig?.borderRadius;
+
+    if (customBorderRadius != null) {
+      return customBorderRadius;
+    }
+
+    // Determine message grouping position
+    final position = _getMessageGroupPosition();
+
+    // Base and tight radius values
+    const double baseRadius = 12.0;
+    const double tightRadius = 4.0;
+
+    // Apply WhatsApp-style border radius based on position and direction
+    return _getGroupedBorderRadius(position, baseRadius, tightRadius);
+  }
+
+  /// Determines the position of this message within a grouped sequence
+  MessageGroupPosition _getMessageGroupPosition() {
+    final bool groupWithPrevious = _shouldGroupWith(previousMessage);
+    final bool groupWithNext = _shouldGroupWith(nextMessage);
+
+    if (!groupWithPrevious && !groupWithNext) {
+      return MessageGroupPosition.single;
+    } else if (groupWithPrevious && groupWithNext) {
+      return MessageGroupPosition.middle;
+    } else if (!groupWithPrevious && groupWithNext) {
+      return MessageGroupPosition.first;
+    } else {
+      return MessageGroupPosition.last;
+    }
+  }
+
+  /// Checks if this message should be grouped with another message
+  bool _shouldGroupWith(Message? other) {
+    if (other == null) return false;
+
+    // Must be from the same sender
+    if (message.sentBy != other.sentBy) return false;
+
+    // Must be within 1 minute of each other
+    final timeDiff = message.createdAt.difference(other.createdAt).abs();
+    return timeDiff <= const Duration(minutes: 1);
+  }
+
+  /// Returns the appropriate BorderRadius based on message position and direction
+  BorderRadius _getGroupedBorderRadius(
+    MessageGroupPosition position,
+    double baseRadius,
+    double tightRadius,
+  ) {
+    switch (position) {
+      case MessageGroupPosition.single:
+        // All corners fully rounded
+        return BorderRadius.circular(baseRadius);
+
+      case MessageGroupPosition.first:
+        // Top corners fully rounded, bottom corner tight on sender's side
+        if (isMessageByCurrentUser) {
+          return BorderRadius.only(
+            topLeft: Radius.circular(baseRadius),
+            topRight: Radius.circular(baseRadius),
+            bottomLeft: Radius.circular(baseRadius),
+            bottomRight: Radius.circular(tightRadius),
+          );
+        } else {
+          return BorderRadius.only(
+            topLeft: Radius.circular(baseRadius),
+            topRight: Radius.circular(baseRadius),
+            bottomLeft: Radius.circular(tightRadius),
+            bottomRight: Radius.circular(baseRadius),
+          );
+        }
+
+      case MessageGroupPosition.middle:
+        // Top and bottom corners tight on sender's side
+        if (isMessageByCurrentUser) {
+          return BorderRadius.only(
+            topLeft: Radius.circular(baseRadius),
+            topRight: Radius.circular(tightRadius),
+            bottomLeft: Radius.circular(baseRadius),
+            bottomRight: Radius.circular(tightRadius),
+          );
+        } else {
+          return BorderRadius.only(
+            topLeft: Radius.circular(tightRadius),
+            topRight: Radius.circular(baseRadius),
+            bottomLeft: Radius.circular(tightRadius),
+            bottomRight: Radius.circular(baseRadius),
+          );
+        }
+
+      case MessageGroupPosition.last:
+        // Bottom corners fully rounded, top corner tight on sender's side
+        if (isMessageByCurrentUser) {
+          return BorderRadius.only(
+            topLeft: Radius.circular(baseRadius),
+            topRight: Radius.circular(tightRadius),
+            bottomLeft: Radius.circular(baseRadius),
+            bottomRight: Radius.circular(baseRadius),
+          );
+        } else {
+          return BorderRadius.only(
+            topLeft: Radius.circular(tightRadius),
+            topRight: Radius.circular(baseRadius),
+            bottomLeft: Radius.circular(baseRadius),
+            bottomRight: Radius.circular(baseRadius),
+          );
+        }
+    }
+  }
 
   Color get _color => isMessageByCurrentUser
       ? outgoingChatBubbleConfig?.color ?? Colors.purple

@@ -38,6 +38,8 @@ class ChatBubbleWidget extends StatefulWidget {
     required this.onSwipe,
     this.onReplyTap,
     this.shouldHighlight = false,
+    this.previousMessage,
+    this.nextMessage,
   });
 
   /// Represent current instance of message.
@@ -57,6 +59,12 @@ class ChatBubbleWidget extends StatefulWidget {
 
   /// Flag for when user tap on replied message and highlight actual message.
   final bool shouldHighlight;
+
+  /// Previous message for grouping context
+  final Message? previousMessage;
+
+  /// Next message for grouping context
+  final Message? nextMessage;
 
   @override
   State<ChatBubbleWidget> createState() => _ChatBubbleWidgetState();
@@ -263,6 +271,8 @@ class _ChatBubbleWidgetState extends State<ChatBubbleWidget> {
                     ?.repliedMsgAutoScrollConfig.highlightScale ??
                 1.1,
             onMaxDuration: _onMaxDuration,
+            previousMessage: widget.previousMessage,
+            nextMessage: widget.nextMessage,
           ),
         ),
       ],

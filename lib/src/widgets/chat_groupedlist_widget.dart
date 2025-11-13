@@ -314,6 +314,11 @@ class _ChatGroupedListWidgetState extends State<ChatGroupedListWidget>
                           ?.repliedMsgAutoScrollConfig
                           .enableScrollToRepliedMsg ??
                       false;
+
+                  // Get previous and next messages for grouping
+                  final previousMessage = newIndex > 0 ? messages[newIndex - 1] : null;
+                  final nextMessage = newIndex < messages.length - 1 ? messages[newIndex + 1] : null;
+
                   return ChatBubbleWidget(
                     key: message.key,
                     message: message,
@@ -329,6 +334,8 @@ class _ChatGroupedListWidgetState extends State<ChatGroupedListWidget>
                     onReplyTap: enableScrollToRepliedMsg
                         ? (replyId) => _onReplyTap(replyId, snapshot.data)
                         : null,
+                    previousMessage: previousMessage,
+                    nextMessage: nextMessage,
                   );
                 },
               );

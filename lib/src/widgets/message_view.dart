@@ -49,6 +49,8 @@ class MessageView extends StatefulWidget {
     this.messageConfig,
     this.onMaxDuration,
     this.controller,
+    this.previousMessage,
+    this.nextMessage,
   });
 
   /// Provides message instance of chat.
@@ -56,6 +58,12 @@ class MessageView extends StatefulWidget {
 
   /// Represents current message is sent by current user.
   final bool isMessageByCurrentUser;
+
+  /// Previous message for grouping context
+  final Message? previousMessage;
+
+  /// Next message for grouping context
+  final Message? nextMessage;
 
   /// Give callback once user long press on chat bubble.
   final DoubleCallBack onLongPress;
@@ -238,6 +246,8 @@ class _MessageViewState extends State<MessageView>
                       highlightColor: widget.highlightColor,
                       highlightMessage: widget.shouldHighlight,
                       receiptWidgetConfig: widget.receiptWidgetConfig,
+                      previousMessage: widget.previousMessage,
+                      nextMessage: widget.nextMessage,
                     );
                   }
                 } else if (widget.message.messageType.isVoice) {
