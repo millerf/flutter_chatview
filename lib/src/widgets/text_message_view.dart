@@ -24,6 +24,7 @@ import 'package:chatview/src/extensions/extensions.dart';
 import 'package:chatview/src/widgets/receipt_widget.dart';
 import 'package:flutter/material.dart';
 
+import 'chat_bubble_tail_painter.dart';
 import 'link_preview.dart';
 import 'reaction_widget.dart';
 
@@ -99,10 +100,31 @@ class TextMessageView extends StatelessWidget {
           Stack(
             clipBehavior: Clip.none,
             children: [
+              // Bubble tail - only show on single or last messages
+              if (_shouldShowTail())
+                Positioned(
+                  bottom: 0,
+                  left: isMessageByCurrentUser ? null : 0,
+                  right: isMessageByCurrentUser ? 0 : null,
+                  child: CustomPaint(
+                    size: const Size(8, 8),
+                    painter: ChatBubbleTailPainter(
+                      color: highlightMessage ? highlightColor : _color,
+                      isIncoming: !isMessageByCurrentUser,
+                    ),
+                  ),
+                ),
               Container(
                   decoration: BoxDecoration(
                     color: highlightMessage ? highlightColor : _color,
                     borderRadius: _borderRadius(textMessage),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withValues(alpha: 0.08),
+                        blurRadius: 3,
+                        offset: const Offset(0, 1),
+                      ),
+                    ],
                   ),
                   padding: _padding ??
                       const EdgeInsets.symmetric(
@@ -157,6 +179,14 @@ class TextMessageView extends StatelessWidget {
   /// Determines if receipts (timestamp and status) should be shown
   /// Only show for single messages or the last message in a group
   bool _shouldShowReceipts() {
+    final position = _getMessageGroupPosition();
+    return position == MessageGroupPosition.single ||
+        position == MessageGroupPosition.last;
+  }
+
+  /// Determines if bubble tail should be shown
+  /// Only show for single messages or the last message in a group
+  bool _shouldShowTail() {
     final position = _getMessageGroupPosition();
     return position == MessageGroupPosition.single ||
         position == MessageGroupPosition.last;

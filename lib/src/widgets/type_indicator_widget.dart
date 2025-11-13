@@ -263,6 +263,9 @@ class _TypingIndicatorState extends State<TypingIndicator>
   }
 
   Widget _buildStatusBubble() {
+    final theme = Theme.of(context);
+    final isDarkMode = theme.brightness == Brightness.dark;
+
     return Container(
       padding: chatBubbleConfig?.padding ??
           const EdgeInsets.fromLTRB(
@@ -271,10 +274,20 @@ class _TypingIndicatorState extends State<TypingIndicator>
       decoration: BoxDecoration(
         borderRadius: chatBubbleConfig?.borderRadius ??
             BorderRadius.circular(replyBorderRadius2),
-        color: chatBubbleConfig?.color ?? Colors.grey.shade500,
+        color: chatBubbleConfig?.color ??
+            (isDarkMode
+                ? theme.colorScheme.surfaceContainerHighest
+                : theme.colorScheme.surfaceContainerHigh),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.1),
+            blurRadius: 4,
+            offset: const Offset(0, 2),
+          ),
+        ],
       ),
       child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 10.0),
+        padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 4.0),
         child: Row(
           children: [
             _bubbleJumpAnimation(2, 0),
