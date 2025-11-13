@@ -38,17 +38,34 @@ class ReceiptWidget extends StatelessWidget {
             builder: (context, MessageStatus value, child) {
               switch (value) {
                 case MessageStatus.undelivered:
-                  return Icon(
-                    Icons.remove_road,
-                    color: Colors.red,
-                    size: 15,
+                  // Make failed message tappable for retry
+                  return InkWell(
+                    onTap: receiptWidgetConfig?.onRetry != null
+                        ? () => receiptWidgetConfig!.onRetry!(message)
+                        : null,
+                    borderRadius: BorderRadius.circular(12),
+                    child: Padding(
+                      padding: const EdgeInsets.all(2.0),
+                      child: Icon(
+                        Icons.error_outline,
+                        color: Colors.red,
+                        size: 16,
+                      ),
+                    ),
                   );
                 case MessageStatus.read:
-                  return Icon(Icons.speed, color: Colors.green, size: 15);
+                  return Icon(Icons.done_all, color: Colors.blue, size: 16);
                 case MessageStatus.delivered:
-                  return Icon(Icons.speed, color: Colors.orange, size: 15);
+                  return Icon(Icons.done_all, color: Colors.grey, size: 16);
                 case MessageStatus.pending:
-                  return Icon(Icons.speed, color: Colors.grey, size: 15);
+                  return SizedBox(
+                    width: 16,
+                    height: 16,
+                    child: CircularProgressIndicator(
+                      strokeWidth: 2,
+                      valueColor: AlwaysStoppedAnimation<Color>(Colors.grey),
+                    ),
+                  );
               }
             },
           ),

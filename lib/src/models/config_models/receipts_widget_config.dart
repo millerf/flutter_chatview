@@ -22,6 +22,7 @@
 
 import 'dart:ui';
 
+import 'package:chatview/chatview.dart';
 import 'package:intl/intl.dart';
 
 class ReceiptsWidgetConfig {
@@ -34,6 +35,13 @@ class ReceiptsWidgetConfig {
   /// Used for giving color of chat bubble receipt text.
   final Color? receiptColorCurrentUser;
 
-  const ReceiptsWidgetConfig(
-      {this.timeFormat, this.receiptColor, this.receiptColorCurrentUser});
+  /// Callback when user taps on failed message to retry
+  final void Function(Message message)? onRetry;
+
+  const ReceiptsWidgetConfig({
+    this.timeFormat,
+    this.receiptColor,
+    this.receiptColorCurrentUser,
+    this.onRetry,
+  });
 }
