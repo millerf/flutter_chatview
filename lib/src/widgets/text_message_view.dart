@@ -92,9 +92,7 @@ class TextMessageView extends StatelessWidget {
     final textTheme = Theme.of(context).textTheme;
     final textMessage = message.message;
     return Container(
-      margin: _margin ??
-          EdgeInsets.fromLTRB(
-              5, 0, 6, message.reaction.reactions.isNotEmpty ? 15 : 2),
+      margin: _getAdjustedMargin(),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.end,
         children: [
@@ -145,13 +143,42 @@ class TextMessageView extends StatelessWidget {
                 ),
             ],
           ),
-          ReceiptWidget(
-              message: message,
-              receiptWidgetConfig: receiptWidgetConfig,
-              isMessageByCurrentUser: isMessageByCurrentUser),
+          // Only show receipts for single messages or last message in a group
+          if (_shouldShowReceipts())
+            ReceiptWidget(
+                message: message,
+                receiptWidgetConfig: receiptWidgetConfig,
+                isMessageByCurrentUser: isMessageByCurrentUser),
         ],
       ),
     );
+  }
+
+  /// Determines if receipts (timestamp and status) should be shown
+  /// Only show for single messages or the last message in a group
+  bool _shouldShowReceipts() {
+    final position = _getMessageGroupPosition();
+    return position == MessageGroupPosition.single ||
+        position == MessageGroupPosition.last;
+  }
+
+  /// Gets adjusted margin based on message grouping position
+  EdgeInsetsGeometry _getAdjustedMargin() {
+    final position = _getMessageGroupPosition();
+    final baseMargin = _margin ??
+        EdgeInsets.fromLTRB(5, 0, 6, message.reaction.reactions.isNotEmpty ? 15 : 2);
+
+    // Reduce vertical spacing for grouped messages (except last one which needs space for receipts)
+    if (position == MessageGroupPosition.first || position == MessageGroupPosition.middle) {
+      return EdgeInsets.fromLTRB(
+        baseMargin.horizontal / 2,
+        0,
+        baseMargin.horizontal / 2,
+        2, // Tight spacing between grouped messages
+      );
+    }
+
+    return baseMargin;
   }
 
   EdgeInsetsGeometry? get _padding => isMessageByCurrentUser
