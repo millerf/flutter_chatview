@@ -220,8 +220,13 @@ class TextMessageView extends StatelessWidget {
 
   /// Determines the position of this message within a grouped sequence
   MessageGroupPosition _getMessageGroupPosition() {
-    final bool groupWithPrevious = _shouldGroupWith(previousMessage);
-    final bool groupWithNext = _shouldGroupWith(nextMessage);
+    // Don't group with previous if THIS message is a reply (needs to show reply context)
+    final bool groupWithPrevious =
+        message.replyMessage == null && _shouldGroupWith(previousMessage);
+
+    // Don't group with next if NEXT message is a reply (it needs to show its reply context)
+    final bool groupWithNext =
+        (nextMessage?.replyMessage == null) && _shouldGroupWith(nextMessage);
 
     if (!groupWithPrevious && !groupWithNext) {
       return MessageGroupPosition.single;
@@ -240,9 +245,6 @@ class TextMessageView extends StatelessWidget {
 
     // Must be from the same sender
     if (message.sentBy != other.sentBy) return false;
-
-    // Don't group if either message is a reply
-    if (message.replyMessage != null || other.replyMessage != null) return false;
 
     // Must be within 1 minute of each other
     final timeDiff = message.createdAt.difference(other.createdAt).abs();
