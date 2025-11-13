@@ -174,7 +174,7 @@ class TextMessageView extends StatelessWidget {
         baseMargin.horizontal / 2,
         0,
         baseMargin.horizontal / 2,
-        1, // Very tight spacing between grouped messages (WhatsApp-style)
+        0, // No spacing between grouped messages (WhatsApp-style)
       );
     }
 
