@@ -241,6 +241,9 @@ class TextMessageView extends StatelessWidget {
     // Must be from the same sender
     if (message.sentBy != other.sentBy) return false;
 
+    // Don't group if either message is a reply
+    if (message.replyMessage != null || other.replyMessage != null) return false;
+
     // Must be within 1 minute of each other
     final timeDiff = message.createdAt.difference(other.createdAt).abs();
     return timeDiff <= const Duration(minutes: 1);
