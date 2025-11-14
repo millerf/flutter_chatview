@@ -100,22 +100,22 @@ class TextMessageView extends StatelessWidget {
           Stack(
             clipBehavior: Clip.none,
             children: [
-              // Bubble tail - only show on single or last messages
-              if (_shouldShowTail())
-                Positioned(
-                  bottom: 0,
-                  left: isMessageByCurrentUser ? null : 0,
-                  right: isMessageByCurrentUser ? 0 : null,
-                  child: CustomPaint(
-                    size: const Size(8, 8),
-                    painter: ChatBubbleTailPainter(
-                      color: highlightMessage
-                          ? (highlightColor ?? _color)
-                          : _color,
-                      isIncoming: !isMessageByCurrentUser,
-                    ),
-                  ),
-                ),
+              // Bubble tail - disabled for now as it renders incorrectly
+              // if (_shouldShowTail())
+              //   Positioned(
+              //     bottom: 0,
+              //     left: isMessageByCurrentUser ? null : 0,
+              //     right: isMessageByCurrentUser ? 0 : null,
+              //     child: CustomPaint(
+              //       size: const Size(8, 8),
+              //       painter: ChatBubbleTailPainter(
+              //         color: highlightMessage
+              //             ? (highlightColor ?? _color)
+              //             : _color,
+              //         isIncoming: !isMessageByCurrentUser,
+              //       ),
+              //     ),
+              //   ),
               Container(
                   decoration: BoxDecoration(
                     color: highlightMessage ? highlightColor : _color,
