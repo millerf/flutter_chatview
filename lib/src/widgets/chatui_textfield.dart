@@ -264,9 +264,10 @@ class _ChatUITextFieldState extends State<ChatUITextField> {
 
                       return Row(
                         children: [
-                          // Location picker - show when not recording and no text
+                          // Location picker - show when not recording, no text, and not focused
                           if (!isRecordingValue &&
                               !hasText &&
+                              !isFocused &&
                               (sendMessageConfig?.enableLocationPicker ?? false) &&
                               sendMessageConfig?.locationPickerCallback != null)
                             IconButton(
