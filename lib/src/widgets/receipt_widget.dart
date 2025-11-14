@@ -39,29 +39,25 @@ class ReceiptWidget extends StatelessWidget {
               switch (value) {
                 case MessageStatus.undelivered:
                   // Make failed message tappable for retry
-                  return InkWell(
+                  return GestureDetector(
                     onTap: receiptWidgetConfig?.onRetry != null
                         ? () => receiptWidgetConfig!.onRetry!(message)
                         : null,
-                    borderRadius: BorderRadius.circular(8),
-                    child: Padding(
-                      padding: const EdgeInsets.all(2.0),
-                      child: Icon(
-                        Icons.error_outline,
-                        color: Colors.red,
-                        size: 15,
-                      ),
+                    child: Icon(
+                      Icons.error_outline,
+                      color: Colors.red,
+                      size: 15,
                     ),
                   );
                 case MessageStatus.read:
                   return Icon(Icons.done_all,
-                      color: Colors.blue.shade600, size: 15);
+                      color: Colors.blue.shade700, size: 15);
                 case MessageStatus.delivered:
                   return Icon(Icons.done_all,
-                      color: Colors.grey.shade600, size: 15);
-                case MessageStatus.pending:
-                  return Icon(Icons.access_time,
                       color: Colors.grey.shade500, size: 15);
+                case MessageStatus.pending:
+                  return Icon(Icons.schedule,
+                      color: Colors.grey.shade400, size: 15);
               }
             },
           ),
