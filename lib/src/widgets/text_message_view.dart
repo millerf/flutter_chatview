@@ -105,9 +105,9 @@ class TextMessageView extends StatelessWidget {
                     borderRadius: _borderRadius(textMessage),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.black.withValues(alpha: 0.08),
-                        blurRadius: 3,
-                        offset: const Offset(0, 1),
+                        color: Colors.black.withValues(alpha: 0.04),
+                        blurRadius: 2,
+                        offset: const Offset(0, 0.5),
                       ),
                     ],
                   ),
