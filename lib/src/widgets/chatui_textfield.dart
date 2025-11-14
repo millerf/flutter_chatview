@@ -71,6 +71,7 @@ class ChatUITextField extends StatefulWidget {
 
 class _ChatUITextFieldState extends State<ChatUITextField> {
   final ValueNotifier<String> _inputText = ValueNotifier('');
+  final ValueNotifier<bool> _isFocused = ValueNotifier(false);
 
   final ImagePicker _imagePicker = ImagePicker();
 
@@ -133,6 +134,10 @@ class _ChatUITextFieldState extends State<ChatUITextField> {
       widget.sendMessageConfig?.textFieldConfig?.onMessageTyping
           ?.call(composingStatus.value);
     });
+
+    widget.focusNode.addListener(() {
+      _isFocused.value = widget.focusNode.hasFocus;
+    });
   }
 
   @override
@@ -152,6 +157,39 @@ class _ChatUITextFieldState extends State<ChatUITextField> {
         builder: (_, isRecordingValue, child) {
           return Row(
             children: [
+              // Camera and Gallery buttons OUTSIDE the input field
+              if (!isRecordingValue) ...[
+                if (sendMessageConfig?.enableCameraImagePicker ?? true)
+                  IconButton(
+                    constraints: const BoxConstraints(),
+                    onPressed: (textFieldConfig?.enabled ?? true)
+                        ? () => _onIconPressed(
+                              ImageSource.camera,
+                              config: sendMessageConfig?.imagePickerConfiguration,
+                            )
+                        : null,
+                    icon: imagePickerIconsConfig?.cameraImagePickerIcon ??
+                        Icon(
+                          Icons.camera_alt_outlined,
+                          color: imagePickerIconsConfig?.cameraIconColor,
+                        ),
+                  ),
+                if (sendMessageConfig?.enableGalleryImagePicker ?? true)
+                  IconButton(
+                    constraints: const BoxConstraints(),
+                    onPressed: (textFieldConfig?.enabled ?? true)
+                        ? () => _onIconPressed(
+                              ImageSource.gallery,
+                              config: sendMessageConfig?.imagePickerConfiguration,
+                            )
+                        : null,
+                    icon: imagePickerIconsConfig?.galleryImagePickerIcon ??
+                        Icon(
+                          Icons.image,
+                          color: imagePickerIconsConfig?.galleryIconColor,
+                        ),
+                  ),
+              ],
               if (isRecordingValue && controller != null && !kIsWeb)
                 Expanded(
                   child: AudioWaveforms(
@@ -214,75 +252,31 @@ class _ChatUITextFieldState extends State<ChatUITextField> {
                     ),
                   ),
                 ),
+              // Send button and location picker - show based on focus/text
               ValueListenableBuilder<String>(
                 valueListenable: _inputText,
                 builder: (_, inputTextValue, child) {
-                  if (inputTextValue.isNotEmpty) {
-                    return IconButton(
-                      color: sendMessageConfig?.defaultSendButtonColor ??
-                          Colors.green,
-                      onPressed: (textFieldConfig?.enabled ?? true)
-                          ? () {
-                              widget.onPressed();
-                              _inputText.value = '';
-                            }
-                          : null,
-                      icon: sendMessageConfig?.sendButtonIcon ??
-                          const Icon(Icons.send),
-                    );
-                  } else {
-                    return Row(
-                      children: [
-                        if (!isRecordingValue) ...[
-                          if (sendMessageConfig?.enableCameraImagePicker ??
-                              true)
-                            IconButton(
-                              constraints: const BoxConstraints(),
-                              onPressed: (textFieldConfig?.enabled ?? true)
-                                  ? () => _onIconPressed(
-                                        ImageSource.camera,
-                                        config: sendMessageConfig
-                                            ?.imagePickerConfiguration,
-                                      )
-                                  : null,
-                              icon: imagePickerIconsConfig
-                                      ?.cameraImagePickerIcon ??
-                                  Icon(
-                                    Icons.camera_alt_outlined,
-                                    color:
-                                        imagePickerIconsConfig?.cameraIconColor,
-                                  ),
-                            ),
-                          if (sendMessageConfig?.enableGalleryImagePicker ??
-                              true)
-                            IconButton(
-                              constraints: const BoxConstraints(),
-                              onPressed: (textFieldConfig?.enabled ?? true)
-                                  ? () => _onIconPressed(
-                                        ImageSource.gallery,
-                                        config: sendMessageConfig
-                                            ?.imagePickerConfiguration,
-                                      )
-                                  : null,
-                              icon: imagePickerIconsConfig
-                                      ?.galleryImagePickerIcon ??
-                                  Icon(
-                                    Icons.image,
-                                    color: imagePickerIconsConfig
-                                        ?.galleryIconColor,
-                                  ),
-                            ),
-                          if (sendMessageConfig?.enableLocationPicker ??
-                              true &&
-                                  sendMessageConfig?.locationPickerCallback !=
-                                      null)
+                  return ValueListenableBuilder<bool>(
+                    valueListenable: _isFocused,
+                    builder: (_, isFocused, child) {
+                      final hasText = inputTextValue.isNotEmpty;
+                      final showSendButton = hasText || isFocused;
+
+                      return Row(
+                        children: [
+                          // Location picker - show when not recording and no text
+                          if (!isRecordingValue &&
+                              !hasText &&
+                              (sendMessageConfig?.enableLocationPicker ?? false) &&
+                              sendMessageConfig?.locationPickerCallback != null)
                             IconButton(
                               constraints: const BoxConstraints(),
                               onPressed: (textFieldConfig?.enabled ?? true)
                                   ? () async {
-                                      LatLng? location = await sendMessageConfig
-                                          ?.locationPickerCallback!
-                                          .call();
+                                      LatLng? location =
+                                          await sendMessageConfig
+                                              ?.locationPickerCallback!
+                                              .call();
                                       widget.onLocationSelected(location);
                                     }
                                   : null,
@@ -294,38 +288,63 @@ class _ChatUITextFieldState extends State<ChatUITextField> {
                                         ?.locationPickerIconColor,
                                   ),
                             ),
+                          // Voice recording buttons
+                          if (!isRecordingValue &&
+                              (sendMessageConfig?.allowRecordingVoice ?? false) &&
+                              !kIsWeb &&
+                              (Platform.isIOS || Platform.isAndroid) &&
+                              !hasText)
+                            IconButton(
+                              onPressed: (textFieldConfig?.enabled ?? true)
+                                  ? _recordOrStop
+                                  : null,
+                              icon: voiceRecordingConfig?.micIcon ??
+                                  Icon(
+                                    Icons.mic,
+                                    color: voiceRecordingConfig?.recorderIconColor,
+                                  ),
+                            ),
+                          if (isRecordingValue)
+                            IconButton(
+                              onPressed: (textFieldConfig?.enabled ?? true)
+                                  ? _recordOrStop
+                                  : null,
+                              icon: voiceRecordingConfig?.stopIcon ??
+                                  Icon(
+                                    Icons.stop,
+                                    color: voiceRecordingConfig?.recorderIconColor,
+                                  ),
+                            ),
+                          if (isRecordingValue &&
+                              cancelRecordConfiguration != null)
+                            IconButton(
+                              onPressed: () {
+                                cancelRecordConfiguration?.onCancel?.call();
+                                _cancelRecording();
+                              },
+                              icon: cancelRecordConfiguration?.icon ??
+                                  const Icon(Icons.cancel_outlined),
+                              color: cancelRecordConfiguration?.iconColor ??
+                                  voiceRecordingConfig?.recorderIconColor,
+                            ),
+                          // Send button - only show when focused or has text
+                          if (showSendButton && !isRecordingValue)
+                            IconButton(
+                              color: sendMessageConfig?.defaultSendButtonColor ??
+                                  Colors.green,
+                              onPressed: hasText && (textFieldConfig?.enabled ?? true)
+                                  ? () {
+                                      widget.onPressed();
+                                      _inputText.value = '';
+                                    }
+                                  : null,
+                              icon: sendMessageConfig?.sendButtonIcon ??
+                                  const Icon(Icons.send),
+                            ),
                         ],
-                        if ((sendMessageConfig?.allowRecordingVoice ?? false) &&
-                            !kIsWeb &&
-                            (Platform.isIOS || Platform.isAndroid))
-                          IconButton(
-                            onPressed: (textFieldConfig?.enabled ?? true)
-                                ? _recordOrStop
-                                : null,
-                            icon: (isRecordingValue
-                                    ? voiceRecordingConfig?.stopIcon
-                                    : voiceRecordingConfig?.micIcon) ??
-                                Icon(
-                                  isRecordingValue ? Icons.stop : Icons.mic,
-                                  color:
-                                      voiceRecordingConfig?.recorderIconColor,
-                                ),
-                          ),
-                        if (isRecordingValue &&
-                            cancelRecordConfiguration != null)
-                          IconButton(
-                            onPressed: () {
-                              cancelRecordConfiguration?.onCancel?.call();
-                              _cancelRecording();
-                            },
-                            icon: cancelRecordConfiguration?.icon ??
-                                const Icon(Icons.cancel_outlined),
-                            color: cancelRecordConfiguration?.iconColor ??
-                                voiceRecordingConfig?.recorderIconColor,
-                          ),
-                      ],
-                    );
-                  }
+                      );
+                    },
+                  );
                 },
               ),
             ],
