@@ -130,40 +130,7 @@ class ImageMessageView extends StatelessWidget {
                         width: imageMessageConfig?.width ?? 150,
                         child: ClipRRect(
                           borderRadius: _borderRadius(),
-                          child: (() {
-                            if (imageUrl.isUrl) {
-                              return Image.network(
-                                imageUrl,
-                                fit: BoxFit.fitHeight,
-                                loadingBuilder:
-                                    (context, child, loadingProgress) {
-                                  if (loadingProgress == null) return child;
-                                  return Center(
-                                    child: CircularProgressIndicator(
-                                      value: loadingProgress
-                                                  .expectedTotalBytes !=
-                                              null
-                                          ? loadingProgress
-                                                  .cumulativeBytesLoaded /
-                                              loadingProgress.expectedTotalBytes!
-                                          : null,
-                                    ),
-                                  );
-                                },
-                              );
-                            } else if (imageUrl.fromMemory) {
-                              return Image.memory(
-                                base64Decode(imageUrl
-                                    .substring(imageUrl.indexOf('base64') + 7)),
-                                fit: BoxFit.fill,
-                              );
-                            } else {
-                              return Image.file(
-                                File(imageUrl),
-                                fit: BoxFit.fill,
-                              );
-                            }
-                          }()),
+                          child: _buildImageContent(context),
                         ),
                       ),
                     ),
@@ -340,5 +307,128 @@ class ImageMessageView extends StatelessWidget {
           );
         }
     }
+  }
+
+  /// Builds the image content with upload progress and error handling
+  Widget _buildImageContent(BuildContext context) {
+    // Check if image is being uploaded
+    if (message.status == MessageStatus.pending &&
+        message.uploadProgress != null) {
+      return ValueListenableBuilder<double?>(
+        valueListenable: message.uploadProgressNotifier,
+        builder: (context, progress, child) {
+          return Stack(
+            children: [
+              // Show the local image if available
+              if (!imageUrl.isUrl)
+                imageUrl.fromMemory
+                    ? Image.memory(
+                        base64Decode(
+                            imageUrl.substring(imageUrl.indexOf('base64') + 7)),
+                        fit: BoxFit.fill,
+                      )
+                    : Image.file(
+                        File(imageUrl),
+                        fit: BoxFit.fill,
+                      ),
+              // Show upload progress overlay
+              Container(
+                color: Colors.black.withValues(alpha: 0.5),
+                child: Center(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      CircularProgressIndicator(
+                        value: progress,
+                        backgroundColor: Colors.white.withValues(alpha: 0.3),
+                        valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                      ),
+                      if (progress != null) ...[
+                        SizedBox(height: 8),
+                        Text(
+                          '${(progress * 100).toInt()}%',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 14,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ],
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          );
+        },
+      );
+    }
+
+    // Handle different image sources
+    if (imageUrl.isUrl) {
+      return Image.network(
+        imageUrl,
+        fit: BoxFit.fitHeight,
+        loadingBuilder: (context, child, loadingProgress) {
+          if (loadingProgress == null) return child;
+          return Center(
+            child: CircularProgressIndicator(
+              value: loadingProgress.expectedTotalBytes != null
+                  ? loadingProgress.cumulativeBytesLoaded /
+                      loadingProgress.expectedTotalBytes!
+                  : null,
+            ),
+          );
+        },
+        errorBuilder: (context, error, stackTrace) {
+          // Show placeholder for deleted/unavailable images
+          return _buildDeletedImagePlaceholder(context);
+        },
+      );
+    } else if (imageUrl.fromMemory) {
+      return Image.memory(
+        base64Decode(imageUrl.substring(imageUrl.indexOf('base64') + 7)),
+        fit: BoxFit.fill,
+        errorBuilder: (context, error, stackTrace) {
+          return _buildDeletedImagePlaceholder(context);
+        },
+      );
+    } else {
+      return Image.file(
+        File(imageUrl),
+        fit: BoxFit.fill,
+        errorBuilder: (context, error, stackTrace) {
+          return _buildDeletedImagePlaceholder(context);
+        },
+      );
+    }
+  }
+
+  /// Builds placeholder for deleted or unavailable images
+  Widget _buildDeletedImagePlaceholder(BuildContext context) {
+    return Container(
+      color: Colors.grey.shade300,
+      child: Center(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(
+              Icons.image_not_supported_outlined,
+              size: 48,
+              color: Colors.grey.shade600,
+            ),
+            SizedBox(height: 8),
+            Text(
+              'Image unavailable',
+              style: TextStyle(
+                color: Colors.grey.shade700,
+                fontSize: 14,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }

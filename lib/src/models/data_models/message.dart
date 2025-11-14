@@ -54,6 +54,9 @@ class Message {
   /// Status of the message.
   final ValueNotifier<MessageStatus> _status;
 
+  /// Upload progress for image/file messages (0.0 to 1.0, null means not uploading)
+  final ValueNotifier<double?> _uploadProgress;
+
   /// Provides max duration for recorded voice message.
   Duration? voiceMessageDuration;
 
@@ -67,9 +70,11 @@ class Message {
     this.messageType = MessageType.text,
     this.voiceMessageDuration,
     MessageStatus status = MessageStatus.pending,
+    double? uploadProgress,
   })  : reaction = reaction ?? Reaction(reactions: [], reactedUserIds: []),
         key = GlobalKey(),
         _status = ValueNotifier(status),
+        _uploadProgress = ValueNotifier(uploadProgress),
         assert(
           (messageType.isVoice
               ? ((defaultTargetPlatform == TargetPlatform.iOS ||
@@ -91,6 +96,17 @@ class Message {
   /// builders will be updated.
   set setStatus(MessageStatus messageStatus) {
     _status.value = messageStatus;
+  }
+
+  /// Current upload progress (0.0 to 1.0, null means not uploading)
+  double? get uploadProgress => _uploadProgress.value;
+
+  /// ValueNotifier for upload progress
+  ValueNotifier<double?> get uploadProgressNotifier => _uploadProgress;
+
+  /// Setter to update upload progress
+  set setUploadProgress(double? progress) {
+    _uploadProgress.value = progress;
   }
 
   factory Message.fromJson(dynamic json) {
@@ -154,6 +170,7 @@ class Message {
     MessageType? messageType,
     Duration? voiceMessageDuration,
     MessageStatus? status,
+    double? uploadProgress,
     bool forceNullValue = false,
   }) {
     return Message(
@@ -168,6 +185,9 @@ class Message {
       reaction: reaction ?? this.reaction,
       replyMessage: replyMessage ?? this.replyMessage,
       status: status ?? this.status,
+      uploadProgress: forceNullValue
+          ? uploadProgress
+          : uploadProgress ?? this.uploadProgress,
     );
   }
 }
