@@ -181,7 +181,7 @@ class TextMessageView extends StatelessWidget {
         12, // Left margin
         0,  // No top margin
         12, // Right margin
-        -2, // Negative margin to make bubbles touch (WhatsApp-style)
+        0,  // No bottom margin for grouped messages
       );
     }
 
