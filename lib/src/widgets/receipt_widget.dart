@@ -43,29 +43,25 @@ class ReceiptWidget extends StatelessWidget {
                     onTap: receiptWidgetConfig?.onRetry != null
                         ? () => receiptWidgetConfig!.onRetry!(message)
                         : null,
-                    borderRadius: BorderRadius.circular(12),
+                    borderRadius: BorderRadius.circular(8),
                     child: Padding(
                       padding: const EdgeInsets.all(2.0),
                       child: Icon(
                         Icons.error_outline,
                         color: Colors.red,
-                        size: 16,
+                        size: 15,
                       ),
                     ),
                   );
                 case MessageStatus.read:
-                  return Icon(Icons.done_all, color: Colors.blue, size: 16);
+                  return Icon(Icons.done_all,
+                      color: Colors.blue.shade600, size: 15);
                 case MessageStatus.delivered:
-                  return Icon(Icons.done_all, color: Colors.grey, size: 16);
+                  return Icon(Icons.done_all,
+                      color: Colors.grey.shade600, size: 15);
                 case MessageStatus.pending:
-                  return SizedBox(
-                    width: 16,
-                    height: 16,
-                    child: CircularProgressIndicator(
-                      strokeWidth: 2,
-                      valueColor: AlwaysStoppedAnimation<Color>(Colors.grey),
-                    ),
-                  );
+                  return Icon(Icons.access_time,
+                      color: Colors.grey.shade500, size: 15);
               }
             },
           ),
