@@ -173,19 +173,25 @@ class TextMessageView extends StatelessWidget {
   EdgeInsetsGeometry _getAdjustedMargin() {
     final position = _getMessageGroupPosition();
     final baseMargin = _margin ??
-        EdgeInsets.fromLTRB(5, 0, 6, message.reaction.reactions.isNotEmpty ? 15 : 2);
+        EdgeInsets.fromLTRB(12, 0, 12, 2);
 
     // Reduce vertical spacing for grouped messages (except last one which needs space for receipts)
     if (position == MessageGroupPosition.first || position == MessageGroupPosition.middle) {
       return EdgeInsets.fromLTRB(
-        baseMargin.horizontal / 2,
-        0,
-        baseMargin.horizontal / 2,
-        0, // No spacing between grouped messages (WhatsApp-style)
+        12, // Left margin
+        0,  // No top margin
+        12, // Right margin
+        1,  // Minimal bottom spacing between grouped messages
       );
     }
 
-    return baseMargin;
+    // Last message or single message - normal spacing
+    return EdgeInsets.fromLTRB(
+      12,
+      0,
+      12,
+      message.reaction.reactions.isNotEmpty ? 15 : 2,
+    );
   }
 
   EdgeInsetsGeometry? get _padding => isMessageByCurrentUser
