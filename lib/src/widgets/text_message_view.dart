@@ -109,7 +109,9 @@ class TextMessageView extends StatelessWidget {
                   child: CustomPaint(
                     size: const Size(8, 8),
                     painter: ChatBubbleTailPainter(
-                      color: highlightMessage ? highlightColor : _color,
+                      color: highlightMessage
+                          ? (highlightColor ?? _color)
+                          : _color,
                       isIncoming: !isMessageByCurrentUser,
                     ),
                   ),
