@@ -24,7 +24,6 @@ import 'package:chatview/src/extensions/extensions.dart';
 import 'package:chatview/src/widgets/receipt_widget.dart';
 import 'package:flutter/material.dart';
 
-import 'chat_bubble_tail_painter.dart';
 import 'link_preview.dart';
 import 'reaction_widget.dart';
 
@@ -100,22 +99,6 @@ class TextMessageView extends StatelessWidget {
           Stack(
             clipBehavior: Clip.none,
             children: [
-              // Bubble tail - disabled for now as it renders incorrectly
-              // if (_shouldShowTail())
-              //   Positioned(
-              //     bottom: 0,
-              //     left: isMessageByCurrentUser ? null : 0,
-              //     right: isMessageByCurrentUser ? 0 : null,
-              //     child: CustomPaint(
-              //       size: const Size(8, 8),
-              //       painter: ChatBubbleTailPainter(
-              //         color: highlightMessage
-              //             ? (highlightColor ?? _color)
-              //             : _color,
-              //         isIncoming: !isMessageByCurrentUser,
-              //       ),
-              //     ),
-              //   ),
               Container(
                   decoration: BoxDecoration(
                     color: highlightMessage ? highlightColor : _color,
@@ -181,14 +164,6 @@ class TextMessageView extends StatelessWidget {
   /// Determines if receipts (timestamp and status) should be shown
   /// Only show for single messages or the last message in a group
   bool _shouldShowReceipts() {
-    final position = _getMessageGroupPosition();
-    return position == MessageGroupPosition.single ||
-        position == MessageGroupPosition.last;
-  }
-
-  /// Determines if bubble tail should be shown
-  /// Only show for single messages or the last message in a group
-  bool _shouldShowTail() {
     final position = _getMessageGroupPosition();
     return position == MessageGroupPosition.single ||
         position == MessageGroupPosition.last;
