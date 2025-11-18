@@ -31,10 +31,13 @@ import 'reaction_widget.dart';
 enum MessageGroupPosition {
   /// Single message (not part of a group)
   single,
+
   /// First message in a group
   first,
+
   /// Middle message in a group
   middle,
+
   /// Last message in a group
   last,
 }
@@ -172,16 +175,14 @@ class TextMessageView extends StatelessWidget {
   /// Gets adjusted margin based on message grouping position
   EdgeInsetsGeometry _getAdjustedMargin() {
     final position = _getMessageGroupPosition();
-    final baseMargin = _margin ??
-        EdgeInsets.fromLTRB(12, 0, 12, 2);
-
     // Reduce vertical spacing for grouped messages (except last one which needs space for receipts)
-    if (position == MessageGroupPosition.first || position == MessageGroupPosition.middle) {
+    if (position == MessageGroupPosition.first ||
+        position == MessageGroupPosition.middle) {
       return EdgeInsets.fromLTRB(
         12, // Left margin
-        0,  // No top margin
+        0, // No top margin
         12, // Right margin
-        0,  // No bottom margin for grouped messages
+        0, // No bottom margin for grouped messages
       );
     }
 
@@ -197,10 +198,6 @@ class TextMessageView extends StatelessWidget {
   EdgeInsetsGeometry? get _padding => isMessageByCurrentUser
       ? outgoingChatBubbleConfig?.padding
       : inComingChatBubbleConfig?.padding;
-
-  EdgeInsetsGeometry? get _margin => isMessageByCurrentUser
-      ? outgoingChatBubbleConfig?.margin
-      : inComingChatBubbleConfig?.margin;
 
   LinkPreviewConfiguration? get _linkPreviewConfig => isMessageByCurrentUser
       ? outgoingChatBubbleConfig?.linkPreviewConfig

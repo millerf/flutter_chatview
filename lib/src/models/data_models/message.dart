@@ -109,11 +109,23 @@ class Message {
     _uploadProgress.value = progress;
   }
 
-  factory Message.fromJson(dynamic json) {
+  factory Message.fromJson(dynamic json,
+      {String Function(String)? imageUrlBuilder}) {
+    final messageType =
+        json['text'] != null ? MessageType.text : MessageType.image;
+    String messageContent = json['text'] ?? json['file'];
+
+    // If it's an image and we have a URL builder, transform the file ID to a URL
+    if (messageType == MessageType.image &&
+        json['file'] != null &&
+        imageUrlBuilder != null) {
+      messageContent = imageUrlBuilder(json['file']);
+    }
+
     return Message(
         id: json['id'],
         sentBy: json['sender_id'],
-        message: json['text'] ?? json['file'],
+        message: messageContent,
         replyMessage: json['reply_message'] is Map<String, dynamic>
             ? ReplyMessage.fromJson(json['reply_message'])
             : null,
@@ -124,8 +136,7 @@ class Message {
           microseconds:
               int.tryParse(json['voice_message_duration'].toString()) ?? 0,
         ),
-        messageType:
-            json['text'] != null ? MessageType.text : MessageType.image,
+        messageType: messageType,
         createdAt: DateTime.parse(json['date_created']).toLocal(),
         status: MessageStatus.values
             .byName(json['status'] ?? MessageStatus.undelivered.name));
