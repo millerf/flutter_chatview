@@ -112,14 +112,14 @@ class Message {
   factory Message.fromJson(dynamic json,
       {String Function(String)? imageUrlBuilder}) {
     final messageType =
-        json['text'] != null ? MessageType.text : MessageType.image;
+        json['file'] != null ? MessageType.image : MessageType.text;
     String messageContent = json['text'] ?? json['file'];
 
     // If it's an image and we have a URL builder, transform the file ID to a URL
     if (messageType == MessageType.image &&
         json['file'] != null &&
         imageUrlBuilder != null) {
-      messageContent = imageUrlBuilder(json['file']);
+      messageContent = imageUrlBuilder(json['file'].toString());
     }
 
     return Message(

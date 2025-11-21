@@ -48,9 +48,13 @@ class ImageMessageConfiguration {
   /// Used for giving border radius of image message.
   final BorderRadius? borderRadius;
 
+  /// Allow to pass headers to the Image.network widget
+  final Map<String, String> Function(String)? getImageHeaders;
+
   const ImageMessageConfiguration({
     this.hideShareIcon = false,
     this.shareIconConfig,
+    this.getImageHeaders,
     this.onTap,
     this.height,
     this.width,

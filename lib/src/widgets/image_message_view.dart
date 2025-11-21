@@ -34,10 +34,13 @@ import 'share_icon.dart';
 enum MessageGroupPosition {
   /// Single message (not part of a group)
   single,
+
   /// First message in a group
   first,
+
   /// Middle message in a group
   middle,
+
   /// Last message in a group
   last,
 }
@@ -124,7 +127,8 @@ class ImageMessageView extends StatelessWidget {
                           top: 6,
                           right: isMessageByCurrentUser ? 6 : 0,
                           left: isMessageByCurrentUser ? 0 : 6,
-                          bottom: message.reaction.reactions.isNotEmpty ? 15 : 0,
+                          bottom:
+                              message.reaction.reactions.isNotEmpty ? 15 : 0,
                         ),
                         height: imageMessageConfig?.height ?? 200,
                         width: imageMessageConfig?.width ?? 150,
@@ -368,6 +372,7 @@ class ImageMessageView extends StatelessWidget {
     if (imageUrl.isUrl) {
       return Image.network(
         imageUrl,
+        headers: imageMessageConfig?.getImageHeaders?.call(imageUrl),
         fit: BoxFit.fitHeight,
         loadingBuilder: (context, child, loadingProgress) {
           if (loadingProgress == null) return child;
