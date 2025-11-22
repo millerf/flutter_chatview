@@ -12,6 +12,7 @@ dependencies:
   flutter:
     sdk: flutter
   cupertino_icons: ^1.0.5
+  cached_network_image: ^3.4.1
   chatview:
     path: ../
 

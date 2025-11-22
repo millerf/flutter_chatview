@@ -22,6 +22,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:chatview/chatview.dart';
 import 'package:chatview/src/extensions/extensions.dart';
 import 'package:flutter/material.dart';
@@ -370,22 +371,16 @@ class ImageMessageView extends StatelessWidget {
 
     // Handle different image sources
     if (imageUrl.isUrl) {
-      return Image.network(
-        imageUrl,
-        headers: imageMessageConfig?.getImageHeaders?.call(imageUrl),
+      return CachedNetworkImage(
+        imageUrl: imageUrl,
+        httpHeaders: imageMessageConfig?.getImageHeaders?.call(imageUrl),
         fit: BoxFit.fitHeight,
-        loadingBuilder: (context, child, loadingProgress) {
-          if (loadingProgress == null) return child;
+        progressIndicatorBuilder: (context, url, downloadProgress) {
           return Center(
-            child: CircularProgressIndicator(
-              value: loadingProgress.expectedTotalBytes != null
-                  ? loadingProgress.cumulativeBytesLoaded /
-                      loadingProgress.expectedTotalBytes!
-                  : null,
-            ),
+            child: CircularProgressIndicator(value: downloadProgress.progress),
           );
         },
-        errorBuilder: (context, error, stackTrace) {
+        errorWidget: (context, error, stackTrace) {
           // Show placeholder for deleted/unavailable images
           return _buildDeletedImagePlaceholder(context);
         },
