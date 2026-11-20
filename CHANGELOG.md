@@ -1,3 +1,7 @@
+## 3.0.0
+
+- Migrate to `package:material_ui` (Flutter 3.50). Breaking for apps still on `package:flutter/material.dart`.
+
 ## [2.4.0]
 
 * **Feat**: [251](https://github.com/SimformSolutionsPvtLtd/flutter_chatview/issues/251) Add

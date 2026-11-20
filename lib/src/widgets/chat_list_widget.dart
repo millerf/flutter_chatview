@@ -25,7 +25,7 @@ import 'dart:io' if (kIsWeb) 'dart:html';
 import 'package:chatview/src/extensions/extensions.dart';
 import 'package:chatview/src/widgets/chat_groupedlist_widget.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 import '../../chatview.dart';
 import 'reply_popup_widget.dart';

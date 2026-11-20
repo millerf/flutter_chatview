@@ -1,5 +1,5 @@
 import '../../values/enumeration.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:cupertino_ui/cupertino_ui.dart';
 
 class SuggestionListConfig {
   final BoxDecoration? decoration;

@@ -21,7 +21,7 @@
  */
 import 'dart:ui';
 
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 import '../models/models.dart';
 import '../utils/constants/constants.dart';

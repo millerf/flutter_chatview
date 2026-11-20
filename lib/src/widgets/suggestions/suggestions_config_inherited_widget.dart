@@ -1,5 +1,5 @@
 import 'package:chatview/src/models/config_models/reply_suggestions_config.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:chatview/chatview.dart';
 
 /// This widget for alternative of excessive amount of passing arguments

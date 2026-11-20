@@ -30,7 +30,7 @@ import 'package:chatview/src/widgets/chatview_state_widget.dart';
 import 'package:chatview/src/widgets/reaction_popup.dart';
 import 'package:chatview/src/widgets/suggestions/suggestions_config_inherited_widget.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 import '../utils/timeago/timeago.dart';
 import '../values/custom_time_messages.dart';

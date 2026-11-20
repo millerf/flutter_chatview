@@ -21,7 +21,7 @@
  */
 import 'package:chatview/chatview.dart';
 import 'package:chatview/src/widgets/receipt_widget.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:platform_maps_flutter/platform_maps_flutter.dart';
 
 import '../utils/constants/constants.dart';

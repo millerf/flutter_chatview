@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 class RepliedMsgAutoScrollConfig {
   /// Auto scrolls to original message when tapped on replied message.

@@ -22,7 +22,7 @@
 import 'package:any_link_preview/any_link_preview.dart';
 import 'package:chatview/src/extensions/extensions.dart';
 import 'package:chatview/src/models/config_models/link_preview_configuration.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../utils/constants/constants.dart';

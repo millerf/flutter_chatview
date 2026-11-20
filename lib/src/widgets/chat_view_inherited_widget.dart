@@ -1,5 +1,5 @@
 import 'package:chatview/src/widgets/reaction_popup.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:chatview/chatview.dart';
 
 /// This widget for alternative of excessive amount of passing arguments

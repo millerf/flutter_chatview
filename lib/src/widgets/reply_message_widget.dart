@@ -21,7 +21,7 @@
  */
 import 'package:audio_waveforms/audio_waveforms.dart';
 import 'package:chatview/chatview.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 import '../utils/constants/constants.dart';
 import '../utils/package_strings.dart';

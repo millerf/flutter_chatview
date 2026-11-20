@@ -22,7 +22,7 @@
 import 'dart:io' if (kIsWeb) 'dart:html';
 import 'package:flutter/foundation.dart' show kIsWeb;
 
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 import '../../chatview.dart';
 import '../utils/constants/constants.dart';

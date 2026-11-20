@@ -20,7 +20,7 @@
  * SOFTWARE.
  */
 import 'package:chatview/chatview.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:cupertino_ui/cupertino_ui.dart';
 import 'package:flutter/foundation.dart';
 
 const messageEmptyId = 0;

@@ -1,6 +1,6 @@
 name: chatview
 description: A Flutter package that allows you to integrate Chat View with highly customization options.
-version: 2.4.0
+version: 3.0.0
 issue_tracker: https://github.com/SimformSolutionsPvtLtd/flutter_chatview/issues
 repository: https://github.com/SimformSolutionsPvtLtd/flutter_chatview
 
@@ -13,7 +13,7 @@ platforms:
   linux:
 
 environment:
-  sdk: '>=3.2.0 <4.0.0'
+  sdk: '>=3.13.0 <4.0.0'
 
 dependencies:
   flutter:
@@ -30,6 +30,8 @@ dependencies:
     git:
       url: https://github.com/millerf/platform_maps_flutter
 
+  material_ui: ^1.4.0
+  cupertino_ui: any
 dev_dependencies:
   flutter_test:
     sdk: flutter

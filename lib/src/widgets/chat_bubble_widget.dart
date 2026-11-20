@@ -21,7 +21,7 @@
  */
 import 'package:chatview/src/extensions/extensions.dart';
 import 'package:chatview/src/utils/constants/constants.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 import '../../chatview.dart';
 import 'message_time_widget.dart';

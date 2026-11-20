@@ -20,7 +20,7 @@
  * SOFTWARE.
  */
 import 'package:chatview/src/models/config_models/receipts_widget_config.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 import '../../values/typedefs.dart';
 import '../models.dart';

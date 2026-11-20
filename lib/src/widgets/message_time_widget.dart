@@ -20,7 +20,7 @@
  * SOFTWARE.
  */
 import 'package:chatview/src/extensions/extensions.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 class MessageTimeWidget extends StatelessWidget {
   const MessageTimeWidget({

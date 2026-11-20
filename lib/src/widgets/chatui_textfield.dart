@@ -25,7 +25,7 @@ import 'dart:io' show File, Platform;
 import 'package:audio_waveforms/audio_waveforms.dart';
 import 'package:chatview/src/utils/constants/constants.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:platform_maps_flutter/platform_maps_flutter.dart';
 

@@ -20,7 +20,7 @@
  * SOFTWARE.
  */
 import 'package:chatview/src/models/config_models/replied_msg_auto_scroll_config.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 import '../../values/typedefs.dart';
 

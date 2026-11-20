@@ -24,7 +24,7 @@ import 'package:chatview/src/inherited_widgets/configurations_inherited_widgets.
 import 'package:chatview/src/widgets/chat_view_inherited_widget.dart';
 import 'package:chatview/src/widgets/profile_image_widget.dart';
 import 'package:chatview/src/widgets/suggestions/suggestions_config_inherited_widget.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:intl/intl.dart';
 
 import '../utils/constants/constants.dart';
